@@ -8,8 +8,12 @@ const Logo: React.FC<{ className?: string, scale?: number, centerOrigin?: boolea
       style={{ transform: `scale(${scale})`, transformOrigin: centerOrigin ? 'center center' : 'left center' }}
     >
       <h1 
-        className="lowercase text-[28px] tracking-tighter mt-0.5 text-zinc-900 dark:text-white"
-        style={{ fontFamily: "'Comfortaa', 'Righteous', cursive", fontWeight: 700, letterSpacing: '-0.06em' }}
+        className="lowercase text-[28px] tracking-tight mt-0.5 text-zinc-900 dark:text-white"
+        style={{ 
+          fontFamily: "'Comfortaa', 'Righteous', cursive", 
+          fontWeight: 800, 
+          letterSpacing: '-0.02em'
+        }}
       >
         vibegadget
       </h1>

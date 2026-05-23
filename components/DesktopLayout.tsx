@@ -54,7 +54,8 @@ const DesktopLayout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const handleLogout = async () => {
     await signOut(auth);
     localStorage.removeItem('f_cart');
-    navigate('/auth-selector');
+    navigate('/');
+    window.dispatchEvent(new CustomEvent('openAccountCenter'));
   };
 
   const showNav = ['/', '/profile', '/search', '/notifications', '/orders', '/wishlist'].includes(location.pathname);

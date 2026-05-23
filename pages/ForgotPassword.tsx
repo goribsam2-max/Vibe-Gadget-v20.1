@@ -20,15 +20,36 @@ const ForgotPassword: React.FC = () => {
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resetEmail) return notify("Please enter your email", "error");
+    if (!resetEmail)
+      return notify("Please enter your email or phone number", "error");
+
+    // Check if input is a phone number (contains mostly digits)
+    const isPhoneNumber = /^\+?[0-9]{8,15}$/.test(
+      resetEmail.replace(/[-.\s]/g, ""),
+    );
+
     setResetLoading(true);
     try {
-      const actionCodeSettings = {
-        url: window.location.origin + "/signin", // will redirect here after reset
-        handleCodeInApp: true,
-      };
-      await sendPasswordResetEmail(auth, resetEmail, actionCodeSettings);
-      setSuccess(true);
+      if (isPhoneNumber) {
+        // Just show success state, admin will manually give the password
+        const res = await fetch('/api/reset-password-request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier: resetEmail })
+        });
+        const data = await res.json();
+        if (!data.success) {
+           return notify(data.error || "Failed to request password reset", "error");
+        }
+        setSuccess(true);
+      } else {
+        const actionCodeSettings = {
+          url: window.location.origin + "/signin", // will redirect here after reset
+          handleCodeInApp: true,
+        };
+        await sendPasswordResetEmail(auth, resetEmail, actionCodeSettings);
+        setSuccess(true);
+      }
     } catch (err: any) {
       notify(getFriendlyErrorMessage(err), "error");
     } finally {
@@ -37,19 +58,32 @@ const ForgotPassword: React.FC = () => {
   };
 
   if (success) {
+    const isPhoneNumber = /^\+?[0-9]{8,15}$/.test(
+      resetEmail.replace(/[-.\s]/g, ""),
+    );
+
     return (
-      <AuthLayout title="Check your email">
+      <AuthLayout
+        title={isPhoneNumber ? "Check your Phone" : "Check your email"}
+      >
         <motion.div
-           initial={{ scale: 0.95, opacity: 0, y: 10 }}
-           animate={{ scale: 1, opacity: 1, y: 0 }}
-           className="text-center"
+          initial={{ scale: 0.95, opacity: 0, y: 10 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          className="text-center"
         >
           <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
-            We've sent a password reset link to{" "}
-            <strong className="text-foreground">
-              {resetEmail}
-            </strong>
-            . Please check your inbox and spam folder.
+            {isPhoneNumber ? (
+              <>
+                Check your Whatsapp or text message to get one time password for{" "}
+                <strong className="text-foreground">{resetEmail}</strong>.
+              </>
+            ) : (
+              <>
+                We've sent a password reset link to{" "}
+                <strong className="text-foreground">{resetEmail}</strong>.
+                Please check your inbox and spam folder.
+              </>
+            )}
           </p>
           <Button
             onClick={() => navigate("/signin")}
@@ -66,7 +100,7 @@ const ForgotPassword: React.FC = () => {
   return (
     <AuthLayout
       title="Reset Password"
-      subtitle="Enter your email address and we'll send you a secure link to reset your password."
+      subtitle="Enter your email or phone number to reset your password."
     >
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -75,14 +109,14 @@ const ForgotPassword: React.FC = () => {
       >
         <form onSubmit={handleResetPassword} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email">Email or Phone</Label>
             <Input
               id="email"
-              type="email"
+              type="text"
               required
               value={resetEmail}
               onChange={(e) => setResetEmail(e.target.value)}
-              placeholder="name@example.com"
+              placeholder="Email address or Phone number"
             />
           </div>
 

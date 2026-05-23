@@ -87,6 +87,24 @@ const AuthSelector: React.FC = () => {
 
       const result = await signInWithPopup(auth, provider);
       await captureUserDetails(result.user);
+      
+      // Save to Account Center
+      let accounts: any[] = [];
+      try {
+        const str = localStorage.getItem("vibe_saved_accounts");
+        if (str) accounts = JSON.parse(str);
+      } catch (e) {}
+      accounts = accounts.filter((a: any) => a.uid !== result.user.uid);
+      accounts.push({
+          uid: result.user.uid,
+          email: result.user.email,
+          password: "",
+          displayName: result.user.displayName || "User",
+          photoURL: result.user.photoURL || "",
+          provider: providerName.toLowerCase()
+      });
+      localStorage.setItem("vibe_saved_accounts", JSON.stringify(accounts));
+
       notify(`Welcome, ${result.user.displayName || "User"}!`, "success");
       navigate("/");
     } catch (err: any) {

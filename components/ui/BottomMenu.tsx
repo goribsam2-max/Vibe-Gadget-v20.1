@@ -97,7 +97,8 @@ const BottomMenu = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate("/signin");
+      navigate("/");
+      window.dispatchEvent(new CustomEvent('openAccountCenter'));
       setView("default");
     } catch (error) {
       console.error("Logout error", error);

@@ -222,6 +222,7 @@ import NotFound from './pages/NotFound';
 import AdminDashboard from './pages/admin/Dashboard';
 import ManageProducts from './pages/admin/ManageProducts';
 import ManageUsers from './pages/admin/ManageUsers';
+import ManagePasswordResets from './pages/admin/ManagePasswordResets';
 import ManagePushNotifications from './pages/admin/ManagePushNotifications';
 import ManageOrders from './pages/admin/ManageOrders';
 import ManageReviews from './pages/admin/ManageReviews';
@@ -333,12 +334,8 @@ const AppContent: React.FC = () => {
             setSavedAccounts(accounts);
             // If they are visiting index or profile and are NOT logged in, and have saved accounts
             if (accounts.length > 0 && !auth.currentUser && !loading && ['/','/profile'].includes(location.pathname)) {
-                 // only auto open if we haven't shown it yet in this session?
-                 // wait, user said: user account login na thakleo site aa dukle dynamic vabe popup asbe
-                 if (!sessionStorage.getItem("account_center_shown")) {
-                     sessionStorage.setItem("account_center_shown", "true");
-                     setIsAccountCenterOpen(true);
-                 }
+                 // user wants this to show every time they visit or refresh and are logged out
+                 setIsAccountCenterOpen(true);
             }
         }
     } catch(e) {}
@@ -500,6 +497,7 @@ const AppContent: React.FC = () => {
                   <Route index element={<PageWrapper><AdminDashboard /></PageWrapper>} />
                   <Route path="products" element={<PageWrapper><ManageProducts /></PageWrapper>} />
                   <Route path="users" element={<PageWrapper><ManageUsers /></PageWrapper>} />
+                  <Route path="password-resets" element={<PageWrapper><ManagePasswordResets /></PageWrapper>} />
                   <Route path="push-notifications" element={<PageWrapper><ManagePushNotifications /></PageWrapper>} />
                   <Route path="orders" element={<PageWrapper><ManageOrders /></PageWrapper>} />
                   <Route path="reviews" element={<PageWrapper><ManageReviews /></PageWrapper>} />

@@ -40,7 +40,8 @@ export default function AccountMenu({ scrolled }: { scrolled?: boolean }) {
   const handleLogout = async () => {
     await signOut(auth);
     localStorage.removeItem("f_cart");
-    navigate("/auth-selector");
+    navigate("/");
+    window.dispatchEvent(new CustomEvent('openAccountCenter'));
   };
 
   const displayName = user?.displayName || user?.email?.split("@")[0] || "User";

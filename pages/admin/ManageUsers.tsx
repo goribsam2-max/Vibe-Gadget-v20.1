@@ -7,7 +7,7 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import { UserProfile } from "../../types";
 import { useNotify, useConfirm } from "../../components/Notifications";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +40,35 @@ const ManageUsers: React.FC = () => {
     notify(currentStatus ? "User unblocked" : "User blocked", "info");
   };
 
+  const [userPasswordReset, setUserPasswordReset] = useState<string>("");
+
+  const handleResetPassword = async (uid: string) => {
+    if (!userPasswordReset || userPasswordReset.length < 6) {
+      return notify("Password must be at least 6 characters", "error");
+    }
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch("/api/admin/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          uid,
+          newPassword: userPasswordReset,
+          adminToken: token,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        notify("Password changed successfully", "success");
+        setUserPasswordReset("");
+      } else {
+        notify(data.error || "Failed to change password", "error");
+      }
+    } catch (e) {
+      notify("Failed to change password", "error");
+    }
+  };
+
   const updateWalletBalance = async (uid: string, newBalance: number) => {
     try {
       await updateDoc(doc(db, "users", uid), {
@@ -60,7 +89,8 @@ const ManageUsers: React.FC = () => {
   const removeAffiliate = async (uid: string) => {
     confirm({
       title: "Remove Affiliate",
-      message: "Are you sure you want to remove this user from the affiliate program?",
+      message:
+        "Are you sure you want to remove this user from the affiliate program?",
       onConfirm: async () => {
         try {
           await updateDoc(doc(db, "users", uid), {
@@ -81,14 +111,15 @@ const ManageUsers: React.FC = () => {
         } catch (e) {
           notify("Error removing affiliate", "error");
         }
-      }
+      },
     });
   };
 
   const addAffiliate = async (uid: string) => {
     confirm({
       title: "Add Affiliate",
-      message: "Are you sure you want to add this user to the affiliate program?",
+      message:
+        "Are you sure you want to add this user to the affiliate program?",
       onConfirm: async () => {
         try {
           await updateDoc(doc(db, "users", uid), {
@@ -109,7 +140,7 @@ const ManageUsers: React.FC = () => {
         } catch (e) {
           notify("Error adding affiliate", "error");
         }
-      }
+      },
     });
   };
 
@@ -214,14 +245,20 @@ const ManageUsers: React.FC = () => {
                 className="flex items-center justify-center size-8 rounded-full bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
                 title="Profile"
               >
-                <Icon name="user" className="text-zinc-600 dark:text-zinc-400 text-xs" />
+                <Icon
+                  name="user"
+                  className="text-zinc-600 dark:text-zinc-400 text-xs"
+                />
               </button>
               <button
                 onClick={() => toggleBan(user.uid, user.isBanned)}
                 className={`flex items-center justify-center size-8 rounded-full transition-colors ${user.isBanned ? "bg-green-50 text-green-600 hover:bg-green-100" : "bg-red-50 text-red-500 hover:bg-red-100"}`}
                 title={user.isBanned ? "Unban User" : "Ban User"}
               >
-                <Icon name={user.isBanned ? "unlock" : "ban"} className="text-xs" />
+                <Icon
+                  name={user.isBanned ? "unlock" : "ban"}
+                  className="text-xs"
+                />
               </button>
             </div>
           </motion.div>
@@ -341,6 +378,27 @@ const ManageUsers: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              <div className="border-t border-zinc-200 dark:border-zinc-800 pt-6 mt-6">
+                <p className="text-sm font-medium text-zinc-500 mb-4">
+                  Reset User Password
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    type="text"
+                    placeholder="New Password (min 6 chars)..."
+                    value={userPasswordReset}
+                    onChange={(e) => setUserPasswordReset(e.target.value)}
+                    className="flex-1 bg-white dark:bg-[#121212] border border-zinc-200 dark:border-zinc-700 px-4 py-3 rounded-xl text-sm font-medium outline-none text-zinc-900 dark:text-zinc-100"
+                  />
+                  <button
+                    onClick={() => handleResetPassword(detailModal.user!.uid)}
+                    className="px-5 py-3 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20 rounded-xl text-xs font-bold hover:bg-red-100 transition-colors whitespace-nowrap"
+                  >
+                    Change Password
+                  </button>
+                </div>
+              </div>
             </div>
 
             <div>
@@ -368,9 +426,7 @@ const ManageUsers: React.FC = () => {
                 />
                 <DetailBit
                   label="Joined"
-                  value={new Date(
-                    detailModal.user.createdAt,
-                  ).toLocaleString()}
+                  value={new Date(detailModal.user.createdAt).toLocaleString()}
                 />
               </div>
             </div>

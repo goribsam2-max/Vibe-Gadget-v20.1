@@ -97,15 +97,21 @@ const EReceipt: React.FC = () => {
         id="receipt-area"
         className="bg-zinc-50 dark:bg-zinc-800 rounded-2xl border border-zinc-100 dark:border-zinc-800 p-8 shadow-sm flex flex-col relative overflow-hidden print:border-0 print:bg-zinc-50 dark:bg-zinc-800 print:shadow-none print:rounded-none"
       >
-        <div className="mb-10 w-full flex flex-col items-center">
-          <div className="w-14 h-14 bg-zinc-900 dark:bg-zinc-50 dark:text-black rounded-full flex items-center justify-center mb-6 shadow-sm">
+        <div className="mb-10 w-full flex flex-col items-center relative">
+          <div className="absolute top-0 right-0">
+             <div className="bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 rounded-full flex items-center space-x-2">
+                 <div className={`w-2 h-2 rounded-full ${order.status === 'processing' ? 'bg-amber-500 animate-pulse' : order.status === 'shipped' ? 'bg-blue-500' : order.status === 'delivered' ? 'bg-green-500' : order.status === 'cancelled' ? 'bg-red-500' : 'bg-green-500'}`} />
+                 <span className="text-[10px] font-bold text-zinc-700 dark:text-zinc-300 uppercase tracking-widest">{order.status || 'Pending'}</span>
+             </div>
+          </div>
+          <div className="w-14 h-14 bg-zinc-900 dark:bg-zinc-50 dark:text-black rounded-full flex items-center justify-center mb-6 shadow-sm mt-4">
             <Icon name="shopping-bag" className="text-white text-xl" />
           </div>
           <h2 className="text-lg font-semibold tracking-tight mb-1 text-zinc-900 dark:text-zinc-100">
             VibeGadget
           </h2>
-          <p className="text-[9px] text-zinc-400 font-bold tracking-normal ">
-            Official Invoice
+          <p className="text-[9px] text-zinc-400 font-bold tracking-normal uppercase">
+            Official E-Receipt
           </p>
         </div>
 

@@ -60,7 +60,10 @@ export function HeroSlider({
 
     const checkAutoPlay = () => {
       const now = Date.now();
-      if (!isAutoPlaying && now - interactTimeRef.current > pauseDurationAfterInteract) {
+      if (
+        !isAutoPlaying &&
+        now - interactTimeRef.current > pauseDurationAfterInteract
+      ) {
         setIsAutoPlaying(true);
       }
     };
@@ -75,9 +78,9 @@ export function HeroSlider({
       return;
     }
 
-    const intervalMs = 50; 
+    const intervalMs = 50;
     const totalSteps = autoSlideDelay / intervalMs;
-    
+
     setProgress(0);
 
     progressTimerRef.current = setInterval(() => {
@@ -86,7 +89,7 @@ export function HeroSlider({
           nextSlide();
           return 0;
         }
-        return prev + (100 / totalSteps);
+        return prev + 100 / totalSteps;
       });
     }, intervalMs);
 
@@ -118,7 +121,7 @@ export function HeroSlider({
   };
 
   return (
-    <div 
+    <div
       className="relative w-full overflow-hidden bg-zinc-50 dark:bg-zinc-900 rounded-3xl"
       onMouseEnter={handleInteract}
       onTouchStart={handleInteract}
@@ -135,7 +138,7 @@ export function HeroSlider({
             transition={{
               x: { type: "spring", stiffness: 300, damping: 30 },
               opacity: { duration: 0.3 },
-              scale: { duration: 0.3 }
+              scale: { duration: 0.3 },
             }}
             className="absolute inset-0 flex flex-col md:flex-row items-center justify-between p-6 md:p-12 w-full h-full cursor-pointer"
             onClick={() => navigate(`/product/${cards[currentIndex].id}`)}
@@ -144,26 +147,32 @@ export function HeroSlider({
               <span className="inline-block px-3 py-1 rounded-full bg-zinc-900/10 dark:bg-zinc-100/10 text-zinc-800 dark:text-zinc-200 text-[10px] font-bold tracking-wider mb-2 uppercase">
                 {cards[currentIndex].category}
               </span>
-              <h2 className="text-xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-2 md:mb-4 tracking-tight leading-tight">
+              <h2
+                className="text-xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-2 md:mb-4 tracking-tight leading-tight line-clamp-2"
+                style={{ fontFamily: "'Comfortaa', cursive" }}
+              >
                 {cards[currentIndex].title}
               </h2>
-              <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base line-clamp-2 mb-4 md:mb-6 max-w-lg hidden md:block">
-                {cards[currentIndex].description}
+              <p className="text-zinc-600 dark:text-zinc-400 text-sm md:text-base line-clamp-1 md:line-clamp-2 overflow-hidden text-ellipsis mb-4 md:mb-6 max-w-lg hidden md:[display:-webkit-box]">
+                {cards[currentIndex].description?.replace(/<[^>]*>?/gm, "")}
               </p>
               <div className="flex items-center justify-center md:justify-start gap-4">
                 <span className="text-lg md:text-2xl font-bold text-zinc-900 dark:text-zinc-100">
                   {cards[currentIndex].date}
                 </span>
-                <Button size="sm" className="rounded-full bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 shadow-lg shadow-black/20 dark:shadow-white/10">
+                <Button
+                  size="sm"
+                  className="rounded-full bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 shadow-lg shadow-black/20 dark:shadow-white/10"
+                >
                   {cards[currentIndex].actionText}
                 </Button>
               </div>
             </div>
-            
+
             <div className="flex-1 w-full h-full relative z-0 flex justify-center items-center mt-4 md:mt-0">
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 dark:from-emerald-900/40 dark:to-teal-900/40 blur-3xl rounded-full scale-110 -z-10" />
-              <img 
-                src={cards[currentIndex].image} 
+              <img
+                src={cards[currentIndex].image}
                 alt={cards[currentIndex].title}
                 className="max-h-[120px] md:max-h-[250px] w-auto object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
               />
@@ -172,19 +181,27 @@ export function HeroSlider({
         </AnimatePresence>
 
         {/* Navigation Arrows */}
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 rounded-full bg-white/50 dark:bg-zinc-800/50 backdrop-blur-md opacity-0 hover:opacity-100 md:opacity-100 md:hover:bg-white dark:md:hover:bg-zinc-800 transition-all shadow-sm"
-          onClick={(e) => { e.stopPropagation(); handleInteract(); prevSlide(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleInteract();
+            prevSlide();
+          }}
         >
           <ChevronLeft className="h-5 w-5" />
         </Button>
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 rounded-full bg-white/50 dark:bg-zinc-800/50 backdrop-blur-md opacity-0 hover:opacity-100 md:opacity-100 md:hover:bg-white dark:md:hover:bg-zinc-800 transition-all shadow-sm"
-          onClick={(e) => { e.stopPropagation(); handleInteract(); nextSlide(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleInteract();
+            nextSlide();
+          }}
         >
           <ChevronRight className="h-5 w-5" />
         </Button>
@@ -193,10 +210,14 @@ export function HeroSlider({
       {/* Pagination indicators */}
       <div className="absolute bottom-4 left-0 w-full flex items-center justify-center p-4 gap-2 z-20">
         {cards.map((_, i) => (
-          <div 
-            key={i} 
-            className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${i === currentIndex ? 'w-8 bg-zinc-900 dark:bg-white' : 'w-2 bg-zinc-400 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-400'}`} 
-            onClick={() => { handleInteract(); setDirection(i > currentIndex ? 1 : -1); setCurrentIndex(i); }} 
+          <div
+            key={i}
+            className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${i === currentIndex ? "w-8 bg-zinc-900 dark:bg-white" : "w-2 bg-zinc-400 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-400"}`}
+            onClick={() => {
+              handleInteract();
+              setDirection(i > currentIndex ? 1 : -1);
+              setCurrentIndex(i);
+            }}
           />
         ))}
       </div>

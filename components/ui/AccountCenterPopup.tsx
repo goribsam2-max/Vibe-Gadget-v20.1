@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNotify } from '../Notifications';
+import { GoogleIcon, AppleIcon, FacebookIcon } from './BrandIcons';
 
 export interface SavedAccount {
   uid: string;
@@ -12,6 +13,7 @@ export interface SavedAccount {
   password?: string;
   displayName: string;
   photoURL?: string;
+  provider?: string;
   lastPasswordChange?: number | null;
 }
 
@@ -144,11 +146,26 @@ export function AccountCenterPopup({ isOpen, onClose, savedAccounts, currentUid 
                                 className={`flex items-center justify-between ${!requiresPass ? 'cursor-pointer' : ''}`}
                               >
                                   <div className="flex items-center space-x-4">
-                                      <div className="w-12 h-12 rounded-full overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
+                                      <div className="w-12 h-12 relative rounded-full overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
                                           {account.photoURL ? (
                                               <img src={account.photoURL} alt={account.displayName} className="w-full h-full object-cover" />
                                           ) : (
                                               <User className="w-6 h-6 text-zinc-400" />
+                                          )}
+                                          {account.provider === 'google' && (
+                                            <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] flex items-center justify-center">
+                                              <GoogleIcon className="w-6 h-6" />
+                                            </div>
+                                          )}
+                                          {account.provider === 'facebook' && (
+                                            <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] flex items-center justify-center">
+                                              <FacebookIcon className="w-6 h-6" />
+                                            </div>
+                                          )}
+                                          {account.provider === 'apple' && (
+                                            <div className="absolute inset-0 bg-white/50 backdrop-blur-[2px] flex items-center justify-center">
+                                              <AppleIcon className="w-6 h-6" />
+                                            </div>
                                           )}
                                       </div>
                                       <div>
@@ -220,7 +237,7 @@ export function AccountCenterPopup({ isOpen, onClose, savedAccounts, currentUid 
                        auth.signOut();
                        localStorage.removeItem("f_cart");
                        onClose();
-                       navigate("/auth-selector");
+                       navigate("/");
                     }}
                     className="w-full flex items-center justify-center space-x-2 p-4 mt-2 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors rounded-2xl text-red-600 dark:text-red-400 font-medium"
                  >

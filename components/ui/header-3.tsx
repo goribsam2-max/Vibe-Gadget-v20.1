@@ -378,8 +378,12 @@ function useScroll(threshold: number) {
 
 const WordmarkIcon = (props: React.ComponentProps<"span">) => (
   <span 
-    className="lowercase text-[28px] tracking-tighter mt-0.5 text-zinc-900 dark:text-white" 
-    style={{ fontFamily: "'Comfortaa', 'Righteous', cursive", fontWeight: 700, letterSpacing: '-0.06em' }}
+    className="lowercase text-[28px] tracking-tight mt-0.5 text-zinc-900 dark:text-white" 
+    style={{ 
+      fontFamily: "'Comfortaa', 'Righteous', cursive", 
+      fontWeight: 800, 
+      letterSpacing: '-0.02em',
+    }}
     {...props}
   >
     vibegadget

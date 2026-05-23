@@ -51,9 +51,9 @@ export function FlashSaleCarousel({ items, onItemClick, onSeeAll, timeStatus = "
               <span className="text-yellow-400 font-black text-2xl relative z-10">⚡</span>
               <span className="absolute -bottom-1 -right-1 text-white bg-black/50 text-[8px] font-black italic px-0.5 leading-none rounded">SALE</span>
             </div>
-            <h2 className="text-white font-bold text-xl tracking-wide flex items-center gap-3">
+            <h2 className="text-white font-bold text-xl flex items-center gap-3" style={{ fontFamily: "'Comfortaa', cursive", letterSpacing: '-0.02em' }}>
               Flash Sale
-              <span className="text-white/90 text-sm font-normal hidden sm:inline-block">{timeStatus}</span>
+              <span className="text-white/90 text-sm font-sans font-normal hidden sm:inline-block tracking-normal">{timeStatus}</span>
             </h2>
           </div>
         </div>

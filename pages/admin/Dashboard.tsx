@@ -23,7 +23,8 @@ import {
   UserPlus,
   Video,
   Bike,
-  Bell
+  Bell,
+  KeyRound
 } from "lucide-react";
 import {
   AreaChart,
@@ -163,6 +164,14 @@ const ADMIN_PIN_ITEMS: PinListItem[] = [
     icon: Search,
     pinned: false,
     href: 'seo'
+  },
+  {
+    id: 'manage-password-resets',
+    name: 'Password Resets',
+    info: 'Manage reset requests',
+    icon: KeyRound,
+    pinned: false,
+    href: 'password-resets'
   },
   {
     id: 'manage-affiliate-requests',

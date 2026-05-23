@@ -531,7 +531,7 @@ const Home: React.FC<{ userData?: any }> = ({ userData }) => {
       {products.length > 0 && (
         <div id="home-products" className="mb-10 md:mb-14">
           <div className="flex items-center justify-between mb-6 px-1">
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+            <h2 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100" style={{ fontFamily: "'Comfortaa', cursive", letterSpacing: '-0.02em' }}>
               Trending Products
             </h2>
           </div>
@@ -647,7 +647,7 @@ const Home: React.FC<{ userData?: any }> = ({ userData }) => {
       <div className="animate-stagger-3 relative z-10 pt-4">
         {/* Categories Section */}
         <div className="flex justify-between items-center mb-4 px-2">
-           <h2 className="text-xl md:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+           <h2 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100" style={{ fontFamily: "'Comfortaa', cursive", letterSpacing: '-0.02em' }}>
              Categories
            </h2>
            <button
@@ -672,7 +672,7 @@ const Home: React.FC<{ userData?: any }> = ({ userData }) => {
 
         {/* Popular Product Section */}
         <div className="flex justify-between items-center mb-6 px-2">
-          <h2 className="text-xl md:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <h2 className="text-xl md:text-2xl font-bold text-zinc-900 dark:text-zinc-100" style={{ fontFamily: "'Comfortaa', cursive", letterSpacing: '-0.02em' }}>
             Popular Product
           </h2>
           <button
